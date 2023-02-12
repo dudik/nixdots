@@ -48,13 +48,10 @@
     layout = "us";
     xkbVariant = "";
     enable = true;
-    # displayManager.startx.enable = true;
+    displayManager.startx.enable = true;
   };
 
   services.getty.autologinUser = "samuel";
-
-  services.xserver.desktopManager.xfce.enable = true;
-  services.spice-vdagentd.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.samuel = {
