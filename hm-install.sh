@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-nix build --no-link .#homeConfigurations.samuel.activationPackage
+# TODO remove nix build --no-link .#homeConfigurations.samuel.activationPackage
+nix build --no-link github:dudik/nixdots#homeConfigurations.samuel.activationPackage
 "$(nix path-info .#homeConfigurations.samuel.activationPackage)"/activate
