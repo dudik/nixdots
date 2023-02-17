@@ -275,6 +275,51 @@
     };
   };
 
+  xsession.enable = true;
+  xsession.scriptPath = ".xinitrc";
+  xsession.initExtra = ''
+    xrandr --output eDP-1 --off
+
+    xsetroot -solid "#282828"
+
+    rm /tmp/nesed.ipc
+    /home/samuel/Desktop/work/nesed/target/debug/nesed test &
+  '';
+  xsession.windowManager.bspwm = {
+    enable = true;
+    monitors = {
+      HDMI-1 = [
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+      ];
+      eDP-1 = [
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+      ];
+    };
+    settings = {
+      border_width = 1;
+      window_gap = 0;
+
+      split_ratio = 0.5;
+      borderless_monocle = true;
+      gapless_monocle = true;
+
+      single_monocle = true;
+
+      focus_follows_pointer = true;
+
+      right_padding = 300;
+      left_padding = 300;
+    };
+  };
+
   services.polybar = {
     enable = true;
     script = "polybar &";
@@ -286,16 +331,16 @@
         bottom = true;
         width = "100%";
         height = "18pt";
-        modules-left = "bspwm xwindow";
+        modules-left = "xworkspaces xwindow";
         modules-right = "nesed alsa battery date";
         font-0 = "JetBrains Mono NL:size=11; 3";
         separator = "|";
         module-margin = 1;
       };
 
-      "module/bspwm" = {
-        type = "internal/bspwm";
-        label-focused-background = "#1D2021";
+      "module/xworkspaces" = {
+        type = "internal/xworkspaces";
+        # label-focused-background = "#1D2021";
         label-focused = " %name% ";
         label-unfocused = " %name% ";
         label-visible = " %name% ";
@@ -303,7 +348,9 @@
         label-occupied = " %name% ";
         label-dimmed = " %name% ";
         label-empty = " %name% ";
-        label-empty-foreground = "#928374";
+        label-empty-foreground = "#928374";      
+        label-active = " %name% ";
+        label-active-background = "#1D2021";
       };
 
       "module/xwindow" = {
@@ -361,51 +408,6 @@
 
         label = "%date%";
       };
-    };
-  };
-
-  xsession.enable = true;
-  xsession.scriptPath = ".xinitrc";
-  xsession.initExtra = ''
-    xrandr --output eDP-1 --off
-
-    xsetroot -solid "#282828"
-
-    rm /tmp/nesed.ipc
-    /home/samuel/Desktop/work/nesed/target/debug/nesed test &
-  '';
-  xsession.windowManager.bspwm = {
-    enable = true;
-    monitors = {
-      HDMI-1 = [
-        "1"
-        "2"
-        "3"
-        "4"
-        "5"
-      ];
-      eDP-1 = [
-        "1"
-        "2"
-        "3"
-        "4"
-        "5"
-      ];
-    };
-    settings = {
-      border_width = 1;
-      window_gap = 0;
-
-      split_ratio = 0.5;
-      borderless_monocle = true;
-      gapless_monocle = true;
-
-      single_monocle = true;
-
-      focus_follows_pointer = true;
-
-      right_padding = 300;
-      left_padding = 300;
     };
   };
 }
