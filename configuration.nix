@@ -90,8 +90,6 @@
     #  wget
   ];
 
-  programs.ssh.startAgent = true;
-
   nix = {
     package = pkgs.nixFlakes;
     extraOptions = ''
