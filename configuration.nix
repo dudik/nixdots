@@ -21,6 +21,12 @@
     "/crypto_keyfile.bin" = null;
   };
 
+  boot.supportedFilesystems = [ "ntfs" ];
+
+  virtualisation.docker.enable = true;
+  programs.dconf.enable = true;
+  virtualisation.libvirtd.enable = true;
+
   networking.hostName = "matoro"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -53,8 +59,13 @@
   services.xserver = {
     layout = "us";
     xkbVariant = "";
+    libinput.enable = true;
     enable = true;
     displayManager.startx.enable = true;
+    videoDrivers = [ "intel" ];
+    deviceSection = ''
+      Option "TearFree" "true"
+    '';
   };
 
   services.getty.autologinUser = "samuel";
@@ -75,8 +86,10 @@
   users.users.samuel = {
     isNormalUser = true;
     description = "Samuel";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "libvirt" ];
     packages = with pkgs; [
+      docker-compose
+      virt-manager
     ];
   };
 
