@@ -23,7 +23,7 @@
 
   boot.supportedFilesystems = [ "ntfs" ];
 
-  virtualisation.docker.enable = true;
+  # virtualisation.docker.enable = true;
   programs.dconf.enable = true;
   virtualisation.libvirtd.enable = true;
 
@@ -68,11 +68,29 @@
     '';
   };
 
+  fonts.fontconfig.allowBitmaps = true;
+  fonts.fontconfig.useEmbeddedBitmaps = true;
+  fonts.fontDir.enable = true;
+
+
   services.getty.autologinUser = "samuel";
 
   services.udisks2.enable = true;
 
   security.rtkit.enable = true;
+
+  security.sudo.extraRules = [
+    {
+      users = [ "samuel" ];
+      commands = [
+        {
+          command = "/bin/light";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   services.pipewire = {
     enable = true;
     pulse.enable = true;
@@ -86,12 +104,15 @@
   users.users.samuel = {
     isNormalUser = true;
     description = "Samuel";
-    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "libvirt" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "libvirt" "video" ];
     packages = with pkgs; [
-      docker-compose
+      # docker-compose
       virt-manager
+      mesa
     ];
   };
+
+  programs.light.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -108,6 +129,7 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    settings.trusted-users = [ "root" "samuel" ];
   };
 
   # Some programs need SUID wrappers, can be configured further or are

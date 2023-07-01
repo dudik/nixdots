@@ -4,46 +4,46 @@
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "utils": "utils"
+        ]
       },
       "locked": {
-        "lastModified": 1678271387,
-        "narHash": "sha256-H2dv/i1LRlunRtrESirELzfPWdlG/6ElDB1ksO529H4=",
+        "lastModified": 1687871164,
+        "narHash": "sha256-bBFlPthuYX322xOlpJvkjUBz0C+MOBjZdDOOJJ+G2jU=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "36999b8d19eb6eebb41983ef017d7e0095316af2",
+        "rev": "07c347bb50994691d7b0095f45ebd8838cf6bc38",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "release-23.05",
         "repo": "home-manager",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1678230755,
-        "narHash": "sha256-SFAXgNjNTXzcAideXcP0takfUGVft/VR5CACmYHg+Fc=",
+        "lastModified": 1687829761,
+        "narHash": "sha256-QRe1Y8SS3M4GeC58F/6ajz6V0ZLUVWX3ZAMgov2N3/g=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a7cc81913bb3cd1ef05ed0ece048b773e1839e51",
+        "rev": "9790f3242da2152d5aa1976e3e4b8b414f4dd206",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-22.11",
+        "ref": "nixos-23.05",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1678293141,
-        "narHash": "sha256-lLlQHaR0y+q6nd6kfpydPTGHhl1rS9nU9OQmztzKOYs=",
+        "lastModified": 1688049487,
+        "narHash": "sha256-100g4iaKC9MalDjUW9iN6Jl/OocTDtXdeAj7pEGIRh4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c90c4025bb6e0c4eaf438128a3b2640314b1c58d",
+        "rev": "4bc72cae107788bf3f24f30db2e2f685c9298dc9",
         "type": "github"
       },
       "original": {
@@ -58,21 +58,6 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable"
-      }
-    },
-    "utils": {
-      "locked": {
-        "lastModified": 1676283394,
-        "narHash": "sha256-XX2f9c3iySLCw54rJ/CZs+ZK6IQy7GXNY4nSOyu2QG4=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "3db36a8b464d0c4532ba1c7dda728f4576d6d073",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
       }
     }
   },

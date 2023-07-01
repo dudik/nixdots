@@ -5,43 +5,56 @@
   home.homeDirectory = "/home/samuel";
 
   home.packages = with pkgs; [
-    dmenu
-    pcmanfm
-    pavucontrol
-    ripgrep
-    vim
-    signal-desktop
-    libreoffice
-    xarchiver
-    libnotify
+    # Wayland specific
+    imv
+    swayidle
+    grim
+    slurp
+    wl-clipboard
 
     jetbrains-mono
-    montserrat
-    lato
     inter
-    roboto
 
-    btop
+    pcmanfm
+    xarchiver
+    pavucontrol
+    libreoffice
+    libnotify
     lxtask
-    eva
+
+    ripgrep
     fd
-    tokei
-    vulnix
 
-    calcurse
-    chromium
-
-    flameshot
-    xorg.xbacklight
+    signal-desktop
   ];
 
-  home.stateVersion = "22.11";
+  home.stateVersion = "23.05";
 
   programs.home-manager.enable = true;
 
-  programs.feh.enable = true;
+  programs.fuzzel = {
+    enable = true;
+    settings = {
+      main = {
+        icons-enabled = false;
+      };
 
-  programs.broot.enable = true;
+      border = {
+        radius = 0;
+        width = 2;
+      };
+
+      colors = {
+        background = "ffffffff";
+        text = "000000ff";
+        border = "000000ff";
+        match = "000000ff";
+        selection = "000000ff";
+        selection-text = "ffffffff";
+        selection-match = "ffffffff";
+      };
+    };
+  };
 
   programs.direnv = {
     enable = true;
@@ -58,7 +71,12 @@
     };
   };
 
-  programs.zathura.enable = true;
+  programs.zathura = {
+    enable = true;
+    options = {
+      scroll-step = 100;
+    };
+  };
 
   programs.vscode = {
     enable = true;
@@ -69,12 +87,19 @@
     enable = true;
     package = pkgs-unstable.helix;
     settings = {
-      theme = "gruvbox";
+      # theme = "gruvbox";
+      theme = "monotone";
 
       editor = {
+        statusline = {
+          left = [ "mode" "version-control" "spacer" "spinner" ];
+          center = [ "file-name" ];
+        };
+        lsp.display-inlay-hints = true;
+        lsp.display-messages = true;
         cursorline = true;
         bufferline = "multiple";
-        idle-timeout = 300;
+        idle-timeout = 0;
         true-color = true;
 
         indent-guides = {
@@ -87,25 +112,44 @@
           select = "underline";
         };
 
+        soft-wrap = {
+          enable = true;
+        };
       };
     };
 
-    languages = [
-      {
-        name = "python";
-        language-server = {
-          command = "pyright-langserver";
-          args = [ "--stdio" ];
-        };
-        config = { };
-        formatter = {
-          command = "black";
-          args = [ "--quiet" "-" ];
-        };
-        auto-format = true;
-      }
-    ];
+    themes = {
+      monotone =
+        let
+          b0 = "#000000";
+          b1 = "#111111";
+          b2 = "#222222";
+          b3 = "#333333";
+          b4 = "#444444";
+          b5 = "#555555";
+          b6 = "#666666";
+          b7 = "#777777";
 
+          w7 = "#888888";
+          w6 = "#999999";
+          w5 = "#aaaaaa";
+          w4 = "#bbbbbb";
+          w3 = "#cccccc";
+          w2 = "#dddddd";
+          w1 = "#eeeeee";
+          w0 = "#ffffff";
+        in
+        {
+          "ui.background" = { fg = b0; bg = w0; };
+          "ui.selection" = { modifiers = [ "reversed" ]; };
+          "ui.cursor" = { bg = w7; };
+          "keyword" = { modifiers = [ "bold" ]; };
+          "diagnostic.warning" = { underline = { color = b0; style = "curl"; }; };
+          "diagnostic.error" = { underline = { color = b0; style = "curl"; }; };
+          "diagnostic.info" = { underline = { color = b0; style = "curl"; }; };
+          "diagnostic.hint" = { underline = { color = b0; style = "curl"; }; };
+        };
+    };
   };
 
   programs.exa = {
@@ -116,6 +160,46 @@
   programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
+  };
+
+  programs.foot = {
+    enable = true;
+    settings = {
+      tweak = {
+        box-drawing-base-thickness = 0.015;
+      };
+      main = {
+        font = "JetBrains Mono NL:style=Regular:size=12.5";
+        dpi-aware = true;
+        shell = "fish";
+      };
+
+      colors = {
+        # Default colors
+        background = "0xffffff";
+        foreground = "0x000000";
+
+        # Normal colors
+        regular0 = "0x000000";
+        regular1 = "0x000000";
+        regular2 = "0x000000";
+        regular3 = "0x000000";
+        regular4 = "0x000000";
+        regular5 = "0x000000";
+        regular6 = "0x000000";
+        regular7 = "0xffffff";
+
+        # Bright colors
+        bright0 = "0x000000";
+        bright1 = "0x000000";
+        bright2 = "0x000000";
+        bright3 = "0x000000";
+        bright4 = "0x000000";
+        bright5 = "0x000000";
+        bright6 = "0x000000";
+        bright7 = "0xffffff";
+      };
+    };
   };
 
   programs.alacritty = {
@@ -145,38 +229,35 @@
         program = "fish";
       };
 
-      # Colors (Gruvbox dark)
       colors = {
         # Default colors
         primary = {
-          # hard contrast: background = '0x1d2021'
-          background = "0x282828";
-          # soft contrast: background = '0x32302f'
-          foreground = "0xebdbb2";
+          background = "0xffffff";
+          foreground = "0x000000";
         };
 
         # Normal colors
         normal = {
-          black = "0x282828";
-          red = "0xcc241d";
-          green = "0x98971a";
-          yellow = "0xd79921";
-          blue = "0x458588";
-          magenta = "0xb16286";
-          cyan = "0x689d6a";
-          white = "0xa89984";
+          black = "0x000000";
+          red = "0x000000";
+          green = "0x000000";
+          yellow = "0x000000";
+          blue = "0x000000";
+          magenta = "0x000000";
+          cyan = "0x000000";
+          white = "0xffffff";
         };
 
         # Bright colors
         bright = {
-          black = "0x928374";
-          red = "0xfb4934";
-          green = "0xb8bb26";
-          yellow = "0xfabd2f";
-          blue = "0x83a598";
-          magenta = "0xd3869b";
-          cyan = "0x8ec07c";
-          white = "0xebdbb2";
+          black = "0x000000";
+          red = "0x000000";
+          green = "0x000000";
+          yellow = "0x000000";
+          blue = "0x000000";
+          magenta = "0x000000";
+          cyan = "0x000000";
+          white = "0xffffff";
         };
       };
     };
@@ -227,361 +308,29 @@
     searchEngines = {
       DEFAULT = "https://searx.be/search?q={}";
     };
-    extraConfig = ''
-      # gruvbox dark hard qutebrowser theme by Florian Bruhin <me@the-compiler.org>
-      #
-      # Originally based on:
-      #   base16-qutebrowser (https://github.com/theova/base16-qutebrowser)
-      #   Base16 qutebrowser template by theova and Daniel Mulford
-      #   Gruvbox dark, hard scheme by Dawid Kurek (dawikur@gmail.com), morhetz (https://github.com/morhetz/gruvbox)
-
-      bg0_hard = "#1d2021"
-      bg0_soft = '#32302f'
-      bg0_normal = '#282828'
-
-      bg0 = bg0_normal
-      bg1 = "#3c3836"
-      bg2 = "#504945"
-      bg3 = "#665c54"
-      bg4 = "#7c6f64"
-
-      fg0 = "#fbf1c7"
-      fg1 = "#ebdbb2"
-      fg2 = "#d5c4a1"
-      fg3 = "#bdae93"
-      fg4 = "#a89984"
-
-      bright_red = "#fb4934"
-      bright_green = "#b8bb26"
-      bright_yellow = "#fabd2f"
-      bright_blue = "#83a598"
-      bright_purple = "#d3869b"
-      bright_aqua = "#8ec07c"
-      bright_gray = "#928374"
-      bright_orange = "#fe8019"
-
-      dark_red = "#cc241d"
-      dark_green = "#98971a"
-      dark_yellow = "#d79921"
-      dark_blue = "#458588"
-      dark_purple = "#b16286"
-      dark_aqua = "#689d6a"
-      dark_gray = "#a89984"
-      dark_orange = "#d65d0e"
-
-      ### Completion
-
-      # Text color of the completion widget. May be a single color to use for
-      # all columns or a list of three colors, one for each column.
-      c.colors.completion.fg = [fg1, bright_aqua, bright_yellow]
-
-      # Background color of the completion widget for odd rows.
-      c.colors.completion.odd.bg = bg0
-
-      # Background color of the completion widget for even rows.
-      c.colors.completion.even.bg = c.colors.completion.odd.bg
-
-      # Foreground color of completion widget category headers.
-      c.colors.completion.category.fg = bright_blue
-
-      # Background color of the completion widget category headers.
-      c.colors.completion.category.bg = bg1
-
-      # Top border color of the completion widget category headers.
-      c.colors.completion.category.border.top = c.colors.completion.category.bg
-
-      # Bottom border color of the completion widget category headers.
-      c.colors.completion.category.border.bottom = c.colors.completion.category.bg
-
-      # Foreground color of the selected completion item.
-      c.colors.completion.item.selected.fg = fg0
-
-      # Background color of the selected completion item.
-      c.colors.completion.item.selected.bg = bg4
-
-      # Top border color of the selected completion item.
-      c.colors.completion.item.selected.border.top = bg2
-
-      # Bottom border color of the selected completion item.
-      c.colors.completion.item.selected.border.bottom = c.colors.completion.item.selected.border.top
-
-      # Foreground color of the matched text in the selected completion item.
-      c.colors.completion.item.selected.match.fg = bright_orange
-
-      # Foreground color of the matched text in the completion.
-      c.colors.completion.match.fg = c.colors.completion.item.selected.match.fg
-
-      # Color of the scrollbar handle in the completion view.
-      c.colors.completion.scrollbar.fg = c.colors.completion.item.selected.fg
-
-      # Color of the scrollbar in the completion view.
-      c.colors.completion.scrollbar.bg = c.colors.completion.category.bg
-
-      ### Context menu
-
-      # Background color of disabled items in the context menu.
-      c.colors.contextmenu.disabled.bg = bg3
-
-      # Foreground color of disabled items in the context menu.
-      c.colors.contextmenu.disabled.fg = fg3
-
-      # Background color of the context menu. If set to null, the Qt default is used.
-      c.colors.contextmenu.menu.bg = bg0
-
-      # Foreground color of the context menu. If set to null, the Qt default is used.
-      c.colors.contextmenu.menu.fg =  fg2
-
-      # Background color of the context menu’s selected item. If set to null, the Qt default is used.
-      c.colors.contextmenu.selected.bg = bg2
-
-      #Foreground color of the context menu’s selected item. If set to null, the Qt default is used.
-      c.colors.contextmenu.selected.fg = c.colors.contextmenu.menu.fg
-
-      ### Downloads
-
-      # Background color for the download bar.
-      c.colors.downloads.bar.bg = bg0
-
-      # Color gradient start for download text.
-      c.colors.downloads.start.fg = bg0
-
-      # Color gradient start for download backgrounds.
-      c.colors.downloads.start.bg = bright_blue
-
-      # Color gradient end for download text.
-      c.colors.downloads.stop.fg = c.colors.downloads.start.fg
-
-      # Color gradient stop for download backgrounds.
-      c.colors.downloads.stop.bg = bright_aqua
-
-      # Foreground color for downloads with errors.
-      c.colors.downloads.error.fg = bright_red
-
-      ### Hints
-
-      # Font color for hints.
-      c.colors.hints.fg = bg0
-
-      # Background color for hints.
-      c.colors.hints.bg = 'rgba(250, 191, 47, 200)'  # bright_yellow
-
-      # Font color for the matched part of hints.
-      c.colors.hints.match.fg = bg4
-
-      ### Keyhint widget
-
-      # Text color for the keyhint widget.
-      c.colors.keyhint.fg = fg4
-
-      # Highlight color for keys to complete the current keychain.
-      c.colors.keyhint.suffix.fg = fg0
-
-      # Background color of the keyhint widget.
-      c.colors.keyhint.bg = bg0
-
-      ### Messages
-
-      # Foreground color of an error message.
-      c.colors.messages.error.fg = bg0
-
-      # Background color of an error message.
-      c.colors.messages.error.bg = bright_red
-
-      # Border color of an error message.
-      c.colors.messages.error.border = c.colors.messages.error.bg
-
-      # Foreground color of a warning message.
-      c.colors.messages.warning.fg = bg0
-
-      # Background color of a warning message.
-      c.colors.messages.warning.bg = bright_purple
-
-      # Border color of a warning message.
-      c.colors.messages.warning.border = c.colors.messages.warning.bg
-
-      # Foreground color of an info message.
-      c.colors.messages.info.fg = fg2
-
-      # Background color of an info message.
-      c.colors.messages.info.bg = bg0
-
-      # Border color of an info message.
-      c.colors.messages.info.border = c.colors.messages.info.bg
-
-      ### Prompts
-
-      # Foreground color for prompts.
-      c.colors.prompts.fg = fg2
-
-      # Border used around UI elements in prompts.
-      c.colors.prompts.border = f'1px solid {bg1}'
-
-      # Background color for prompts.
-      c.colors.prompts.bg = bg3
-
-      # Background color for the selected item in filename prompts.
-      c.colors.prompts.selected.bg = bg2
-
-      ### Statusbar
-
-      # Foreground color of the statusbar.
-      c.colors.statusbar.normal.fg = fg2
-
-      # Background color of the statusbar.
-      c.colors.statusbar.normal.bg = bg0
-
-      # Foreground color of the statusbar in insert mode.
-      c.colors.statusbar.insert.fg = bg0
-
-      # Background color of the statusbar in insert mode.
-      c.colors.statusbar.insert.bg = dark_aqua
-
-      # Foreground color of the statusbar in passthrough mode.
-      c.colors.statusbar.passthrough.fg = bg0
-
-      # Background color of the statusbar in passthrough mode.
-      c.colors.statusbar.passthrough.bg = dark_blue
-
-      # Foreground color of the statusbar in private browsing mode.
-      c.colors.statusbar.private.fg = bright_purple
-
-      # Background color of the statusbar in private browsing mode.
-      c.colors.statusbar.private.bg = bg0
-
-      # Foreground color of the statusbar in command mode.
-      c.colors.statusbar.command.fg = fg3
-
-      # Background color of the statusbar in command mode.
-      c.colors.statusbar.command.bg = bg1
-
-      # Foreground color of the statusbar in private browsing + command mode.
-      c.colors.statusbar.command.private.fg = c.colors.statusbar.private.fg
-
-      # Background color of the statusbar in private browsing + command mode.
-      c.colors.statusbar.command.private.bg = c.colors.statusbar.command.bg
-
-      # Foreground color of the statusbar in caret mode.
-      c.colors.statusbar.caret.fg = bg0
-
-      # Background color of the statusbar in caret mode.
-      c.colors.statusbar.caret.bg = dark_purple
-
-      # Foreground color of the statusbar in caret mode with a selection.
-      c.colors.statusbar.caret.selection.fg = c.colors.statusbar.caret.fg
-
-      # Background color of the statusbar in caret mode with a selection.
-      c.colors.statusbar.caret.selection.bg = bright_purple
-
-      # Background color of the progress bar.
-      c.colors.statusbar.progress.bg = bright_blue
-
-      # Default foreground color of the URL in the statusbar.
-      c.colors.statusbar.url.fg = fg4
-
-      # Foreground color of the URL in the statusbar on error.
-      c.colors.statusbar.url.error.fg = dark_red
-
-      # Foreground color of the URL in the statusbar for hovered links.
-      c.colors.statusbar.url.hover.fg = bright_orange
-
-      # Foreground color of the URL in the statusbar on successful load
-      # (http).
-      c.colors.statusbar.url.success.http.fg = bright_red
-
-      # Foreground color of the URL in the statusbar on successful load
-      # (https).
-      c.colors.statusbar.url.success.https.fg = fg0
-
-      # Foreground color of the URL in the statusbar when there's a warning.
-      c.colors.statusbar.url.warn.fg = bright_purple
-
-      ### tabs
-
-      # Background color of the tab bar.
-      c.colors.tabs.bar.bg = bg0
-
-      # Color gradient start for the tab indicator.
-      c.colors.tabs.indicator.start = bright_blue
-
-      # Color gradient end for the tab indicator.
-      c.colors.tabs.indicator.stop = bright_aqua
-
-      # Color for the tab indicator on errors.
-      c.colors.tabs.indicator.error = bright_red
-
-      # Foreground color of unselected odd tabs.
-      c.colors.tabs.odd.fg = fg2
-
-      # Background color of unselected odd tabs.
-      c.colors.tabs.odd.bg = bg2
-
-      # Foreground color of unselected even tabs.
-      c.colors.tabs.even.fg = c.colors.tabs.odd.fg
-
-      # Background color of unselected even tabs.
-      c.colors.tabs.even.bg = bg3
-
-      # Foreground color of selected odd tabs.
-      c.colors.tabs.selected.odd.fg = fg2
-
-      # Background color of selected odd tabs.
-      c.colors.tabs.selected.odd.bg = bg0
-
-      # Foreground color of selected even tabs.
-      c.colors.tabs.selected.even.fg = c.colors.tabs.selected.odd.fg
-
-      # Background color of selected even tabs.
-      c.colors.tabs.selected.even.bg = bg0
-
-      # Background color of pinned unselected even tabs.
-      c.colors.tabs.pinned.even.bg = bright_green
-
-      # Foreground color of pinned unselected even tabs.
-      c.colors.tabs.pinned.even.fg = bg2
-
-      # Background color of pinned unselected odd tabs.
-      c.colors.tabs.pinned.odd.bg = bright_green
-
-      # Foreground color of pinned unselected odd tabs.
-      c.colors.tabs.pinned.odd.fg = c.colors.tabs.pinned.even.fg
-
-      # Background color of pinned selected even tabs.
-      c.colors.tabs.pinned.selected.even.bg = bg0
-
-      # Foreground color of pinned selected even tabs.
-      c.colors.tabs.pinned.selected.even.fg = c.colors.tabs.selected.odd.fg
-
-      # Background color of pinned selected odd tabs.
-      c.colors.tabs.pinned.selected.odd.bg = c.colors.tabs.pinned.selected.even.bg
-
-      # Foreground color of pinned selected odd tabs.
-      c.colors.tabs.pinned.selected.odd.fg = c.colors.tabs.selected.odd.fg
-
-      # Background color for webpages if unset (or empty to use the theme's
-      # color).
-      # c.colors.webpage.bg = bg4
-    '';
   };
 
-  programs.brave.enable = true;
   programs.librewolf.enable = true;
+
   programs.mpv = {
     enable = true;
     config = {
       fullscreen = true;
       ytdl-format = "bestvideo[height<=?1080]+bestaudio/best";
-      osd-font = "Roboto";
-      sub-font = "Roboto";
+      osd-font = "Inter";
+      sub-font = "Inter";
     };
     bindings = {
       "]" = "add speed 0.05";
       "[" = "add speed -0.05";
     };
   };
+
   programs.yt-dlp = {
     enable = true;
     package = pkgs-unstable.yt-dlp;
   };
+
   programs.thunderbird = {
     enable = true;
     profiles = {
@@ -596,246 +345,222 @@
     delta = {
       enable = true;
       options = {
-        syntax-theme = "gruvbox-dark";
+        syntax-theme = "gruvbox-light";
       };
     };
     userName = "Samuel Dudík";
     userEmail = "24730635+dudik@users.noreply.github.com";
   };
 
-  programs.bash.enable = true;
-  programs.bash.profileExtra = ''
-    if [ -z $DISPLAY ] && [ $XDG_VTNR -eq 1 ]; then
-      exec startx
-    fi
-  '';
+  programs.bash = {
+    enable = true;
+    profileExtra = ''
+      if [ -z $DISPLAY ] && [ $XDG_VTNR -eq 1 ]; then
+        exec sway
+      fi
+    '';
+  };
 
   # TODO Remove after figuring out automounting in a different way
   services.udiskie.enable = true;
 
-  services.redshift = {
+  services.mako = {
     enable = true;
-    # Trnava
-    latitude = 48.37741;
-    longitude = 17.58723;
+    textColor = "#000000";
+    backgroundColor = "#ffffff";
+    borderColor = "#000000";
+    defaultTimeout = 5000;
   };
 
-  services.dunst.enable = true;
-
-  services.unclutter = {
+  services.kanshi = {
     enable = true;
-    timeout = 5;
+    profiles = {
+      undocked = {
+        outputs = [
+          {
+            criteria = "eDP-1";
+          }
+        ];
+      };
+
+      docked = {
+        outputs = [
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+          {
+            criteria = "SOMELEC Z.I. Du Vert Galanta Mira133 202105";
+          }
+        ];
+      };
+    };
   };
 
-  services.xidlehook = {
+  services.swayidle = {
     enable = true;
-    not-when-audio = true;
-    timers = [
+    timeouts = [
       {
-        delay = 60 * 6;
-        command = "systemctl suspend";
+        timeout = 60 * 5;
+        command = "${pkgs.systemd}/bin/systemctl suspend";
       }
     ];
   };
 
-  services.sxhkd = {
+  # programs.i3status-rust = {
+  #   enable = true;
+  #   bars = {
+  #     default = {
+  #       settings = {
+  #         theme = {
+  #           theme = "plain";
+  #           overrides = {
+  #             idle_bg = "#ffffff";
+  #             idle_fg = "#000000";
+  #             info_bg = "#ffffff";
+  #             info_fg = "#000000";
+  #             good_bg = "#ffffff";
+  #             good_fg = "#000000";
+  #             warning_bg = "#ffffff";
+  #             warning_fg = "#000000";
+  #             critical_bg = "#ffffff";
+  #             critical_fg = "#000000";
+  #             separator = "";
+  #             separator_bg = "#ffffff";
+  #             separator_fg = "#000000";
+  #           };
+  #         };
+  #       };
+
+  #       blocks = [
+  #         # {
+  #         #   alert = 10.0;
+  #         #   block = "disk_space";
+  #         #   info_type = "available";
+  #         #   interval = 60;
+  #         #   path = "/";
+  #         #   warning = 20.0;
+  #         # }
+  #         # {
+  #         #   block = "memory";
+  #         #   format = " $icon mem_used_percents ";
+  #         #   format_alt = " $icon $swap_used_percents ";
+  #         # }
+  #         # {
+  #         #   block = "cpu";
+  #         #   interval = 1;
+  #         # }
+  #         {
+  #           block = "sound";
+  #         }
+  #         {
+  #           block = "time";
+  #           format = " $timestamp.datetime(f:'%a %d/%m %R') ";
+  #           interval = 10;
+  #         }
+  #       ];
+  #     };
+  #   };
+  # };
+
+  wayland.windowManager.sway = {
     enable = true;
-    keybindings = {
-      "alt + Return" = "alacritty";
-      "alt + q" = "dmenu_run -nb '#282828' -nf '#A89984' -sb '#1D2021' -fn 'JetBrains Mono NL:style=Regular:size=11'";
-      "alt + b" = "qutebrowser";
+    xwayland = false;
+    wrapperFeatures.gtk = true;
 
-      "alt + {_,shift + } a" = "bspc {desktop -f,node -d} 1";
-      "alt + {_,shift + } s" = "bspc {desktop -f,node -d} 2";
-      "alt + {_,shift + } d" = "bspc {desktop -f,node -d} 3";
-      "alt + {_,shift + } f" = "bspc {desktop -f,node -d} 4";
-      "alt + {_,shift + } g" = "bspc {desktop -f,node -d} 5";
+    extraConfig = ''
+      default_border pixel 1
+      workspace_layout tabbed
+      hide_edge_borders --i3 smart
 
-      "alt + {_,shift + } 1" = "bspc {desktop -f,node -d} 1";
-      "alt + {_,shift + } 2" = "bspc {desktop -f,node -d} 2";
-      "alt + {_,shift + } 3" = "bspc {desktop -f,node -d} 3";
-      "alt + {_,shift + } 4" = "bspc {desktop -f,node -d} 4";
-      "alt + {_,shift + } 5" = "bspc {desktop -f,node -d} 5";
+      client.focused #000000 #ffffff #000000
+      client.unfocused #000000 #ffffff #000000
 
-      "alt + {grave,Tab}" = "bspc {node,desktop} -f last";
+      # bindswitch lid:on output eDP-1 disable
+      # bindswitch lid:off output eDP-1 enable
 
-      "alt + {_,shift + } w" = "bspc node -{c,k}";
-
-      # focus the next/previous window in the current desktop
-      "alt + {_,shift + } c" = "bspc node -f {next,prev}.local.!hidden.window";
-
-      # alternate between the tiled and monocle layout
-      "alt + m" = "bspc desktop -l next";
-
-      # make sxhkd reload its configuration files
-      "alt + Escape" = "pkill -USR1 -x sxhkd";
-
-      "alt + z" = "setxkbmap {us, sk qwerty}";
-
-      # Toggle mute
-      "XF86AudioMute" = "wpctl set-mute @DEFAULT_SINK@ toggle";
-
-      # Toggle mute
-      "alt + i" = "wpctl set-mute @DEFAULT_SINK@ toggle";
-
-      # Toggle mic mute
-      # "XF86AudioMicMute" = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
-
-      # Change volume
-      "XF86Audio{Raise,Lower}Volume" = "wpctl set-volume @DEFAULT_SINK@ 0.02{+,-}";
-
-      # Change volume
-      "alt + {p,o}" = "wpctl set-volume @DEFAULT_SINK@ 0.02{+,-}";
-
-      # Change volume, chunky
-      "alt + shift + {p,o}" = "wpctl set-volume @DEFAULT_SINK@ {+,-}10%";
-
-      "alt + t" = "{ bspc config right_padding 0 && bspc config left_padding 0, bspc config right_padding 300 && bspc config left_padding 300 }";
-    };
-  };
-
-  xsession.enable = true;
-  xsession.scriptPath = ".xinitrc";
-  xsession.initExtra = ''
-    if xrandr | grep -q "HDMI1 connected"; then
-      xrandr --output eDP1 --off
-    else
-      echo "Xft.dpi: 115" | xrdb
-    fi
-
-    xsetroot -solid "#282828"
-
-    rm /tmp/nesed.ipc
-    /home/samuel/Desktop/work/nesed/target/debug/nesed test &
-  '';
-  xsession.windowManager.bspwm = {
-    enable = true;
-    startupPrograms = [ "systemctl --user restart polybar" ];
-    rules = {
-      "Zathura" = {
-        state = "tiled";
-      };
-    };
-    monitors = {
-      HDMI1 = [
-        "1"
-        "2"
-        "3"
-        "4"
-        "5"
-      ];
-      eDP1 = [
-        "1"
-        "2"
-        "3"
-        "4"
-        "5"
-      ];
-    };
-    settings = {
-      border_width = 1;
-      window_gap = 0;
-
-      split_ratio = 0.5;
-      borderless_monocle = true;
-      gapless_monocle = true;
-
-      single_monocle = true;
-
-      focus_follows_pointer = true;
-
-      right_padding = 300;
-      left_padding = 300;
-    };
-  };
-
-  services.polybar = {
-    enable = true;
-    script = "polybar &";
-    settings = {
-      "bar/main" = {
-        padding-right = 1;
-        background = "#282828";
-        foreground = "#EBDBB2";
-        bottom = true;
-        width = "100%";
-        height = "18pt";
-        modules-left = "xworkspaces xwindow";
-        modules-right = "nesed alsa battery date";
-        font-0 = "JetBrains Mono NL:size=11; 3";
-        separator = "|";
-        module-margin = 1;
+      focus_wrapping yes
+    '';
+    config = {
+      input = {
+        "type:keyboard" = {
+          xkb_layout = "us,sk";
+          xkb_options = "grp:alt_shift_toggle,altwin:swap_lalt_lwin,grp:alt_shift_toggle";
+        };
       };
 
-      "module/xworkspaces" = {
-        type = "internal/xworkspaces";
-        # label-focused-background = "#1D2021";
-        label-focused = " %name% ";
-        label-unfocused = " %name% ";
-        label-visible = " %name% ";
-        label-urgent = " %name% ";
-        label-occupied = " %name% ";
-        label-dimmed = " %name% ";
-        label-empty = " %name% ";
-        label-empty-foreground = "#928374";
-        label-active = " %name% ";
-        label-active-background = "#1D2021";
+      seat = {
+        "*" = {
+          hide_cursor = "5000";
+        };
       };
 
-      "module/xwindow" = {
-        type = "internal/xwindow";
-        # label = %title:0:80:...%
+      keybindings = {
+        "Mod4+Return" = "exec foot --working-directory ~/Desktop";
+        "Mod4+q" = "exec fuzzel";
+        "Mod4+w" = "kill";
+        "Mod4+t" = "layout toggle tabbed split";
+        "Mod4+j" = "focus left";
+        "Mod4+k" = "focus right";
+        "Mod4+c" = "focus next";
+
+        "Mod4+r" = "exec grim -g \"$(slurp -d -b 00000050)\" - | wl-copy";
+
+        "Mod4+z" = "exec swaymsg -t get_inputs | grep -q 'English' && swaymsg input type:keyboard xkb_layout 'sk(qwerty)' || swaymsg input type:keyboard xkb_layout us";
+
+        "Mod4+semicolon" = "exec notify-send \"$(date)\"";
+
+        "Mod4+p" = "exec wpctl set-volume @DEFAULT_SINK@ 0.02+";
+        "Mod4+o" = "exec wpctl set-volume @DEFAULT_SINK@ 0.02-";
+
+        "Mod4+1" = "workspace number 1";
+        "Mod4+a" = "workspace number 1";
+        "Mod4+2" = "workspace number 2";
+        "Mod4+s" = "workspace number 2";
+        "Mod4+3" = "workspace number 3";
+        "Mod4+d" = "workspace number 3";
+        "Mod4+4" = "workspace number 4";
+        "Mod4+f" = "workspace number 4";
+        "Mod4+5" = "workspace number 5";
+        "Mod4+g" = "workspace number 5";
+
+        "Mod4+Shift+1" = "move container to workspace number 1";
+        "Mod4+Shift+a" = "move container to workspace number 1";
+        "Mod4+Shift+2" = "move container to workspace number 2";
+        "Mod4+Shift+s" = "move container to workspace number 2";
+        "Mod4+Shift+3" = "move container to workspace number 3";
+        "Mod4+Shift+d" = "move container to workspace number 3";
+        "Mod4+Shift+4" = "move container to workspace number 4";
+        "Mod4+Shift+f" = "move container to workspace number 4";
+        "Mod4+Shift+5" = "move container to workspace number 5";
+        "Mod4+Shift+g" = "move container to workspace number 5";
       };
+      terminal = "alacritty";
+      menu = "wofi --show run";
+      bars = [ ];
+      # Status bar(s)
+      # bars = [{
+      #   fonts.size = 15.0;
+      #   # command = "waybar"; You can change it if you want
+      #   statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
+      #   position = "bottom";
+      #   colors = {
+      #     background = "#ffffff";
+      #     statusline = "#ffffff";
+      #     active_workspace = "#ffffff";
+      #   };
+      # }];
+      # Display device configuration
+      output = {
+        eDP-1 = {
+          # Set HIDP scale (pixel integer scaling)
+          scale = "1";
+          mode = "1920x1080";
+        };
 
-      "module/nesed" = {
-        type = "custom/script";
-        exec = "/home/samuel/Desktop/work/nesed/target/debug/nesed";
-        interval = 5;
-      };
-
-      "module/alsa" = {
-        type = "internal/alsa";
-        format-volume-prefix = "VOL ";
-        label-muted = "VOL MUT";
-      };
-
-      "module/memory" = {
-        type = "internal/memory";
-        interval = 2;
-        format-prefix = "RAM ";
-      };
-
-      "module/cpu" = {
-        type = "internal/cpu";
-        interval = 2;
-        format-prefix = "CPU ";
-      };
-
-      "module/battery" = {
-        type = "internal/battery";
-
-        label-full = "BAT %percentage%%";
-        label-charging = "BAT CHAR %percentage%% %time%";
-        label-discharging = "BAT DIS %percentage%% %time%";
-        time-format = "%H:%M";
-
-        full-at = 50;
-        low-at = 10;
-
-        battery = "BAT0";
-        adapter = "AC";
-
-        poll-interval = 10;
-      };
-
-      "module/date" = {
-        type = "internal/date";
-        # interval = 1
-
-        date = "%a %d %b %H:%M";
-        date-alt = "%a %d %b %H:%M:%S";
-
-        label = "%date%";
+        DP-1 = {
+          bg = "#ffffff solid_color";
+        };
       };
     };
   };
